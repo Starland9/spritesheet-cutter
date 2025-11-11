@@ -7,6 +7,8 @@ import {Toolbar, ToolbarGroup} from './Toolbar';
 import pageLayout from './pageLayout';
 
 import PreviewPanel from '../cutter/PreviewPanel';
+import GridSlicer from '../cutter/GridSlicer';
+import AutoSlicer from '../cutter/AutoSlicer';
 
 (function() {
 	// init
@@ -25,6 +27,8 @@ import PreviewPanel from '../cutter/PreviewPanel';
 		var spriteCanvasView  = new SpriteCanvasView( spriteCanvas, $canvasContainer );
 		var imgInput          = new ImgInput( $canvasContainer, $canvasContainer, $tutorialLink.attr('href') );
 		var previewPanel      = new PreviewPanel( spriteCanvas, $codeContainer );
+		var gridSlicer        = new GridSlicer( spriteCanvas, spriteCanvasView );
+		var autoSlicer        = new AutoSlicer( spriteCanvas, spriteCanvasView );
 		var toolbarTop        = new Toolbar('.toolbar-container');
 		var toolbarBottom     = new Toolbar('.toolbar-bottom-container');
 		
@@ -36,7 +40,12 @@ import PreviewPanel from '../cutter/PreviewPanel';
 					addItem('select-sprite', 'Select Sprite', {active: true}).
 					addItem('select-bg', 'Pick Background')
 			).
-			addItem('invert-bg', 'Toggle Dark Background', {noLabel: true});
+			addItem('invert-bg', 'Toggle Dark Background', {noLabel: true}).
+			addItem('zoom-in', 'Zoom In', {noLabel: true}).
+			addItem('zoom-out', 'Zoom Out', {noLabel: true}).
+			addItem('zoom-reset', 'Reset Zoom', {noLabel: true}).
+			addItem('grid-slice', 'Grid Slice', {noLabel: true}).
+			addItem('auto-select', 'Auto Select All');
 
 		toolbarTop.$container.addClass('top');
 
@@ -69,6 +78,10 @@ import PreviewPanel from '../cutter/PreviewPanel';
 				}
 			});
 		});
+		spriteCanvasView.bind('rectAdjusted', function() {
+			previewPanel.update();
+		});
+
 		
 		spriteCanvasView.bind('bgColorHover', function(color) {
 			toolbarTop.feedback( colourBytesToCss(color) );
@@ -79,6 +92,10 @@ import PreviewPanel from '../cutter/PreviewPanel';
 			spriteCanvasView.setTool(toolName);
 			toolbarTop.activate(toolName);
 			toolbarTop.feedback( 'Background set to ' + colourBytesToCss(color) );
+		});
+		
+		spriteCanvasView.bind('rightClickExport', function() {
+			previewPanel.handleExport();
 		});
 		
 		toolbarTop.bind('open-img', function(event) {
@@ -107,6 +124,44 @@ import PreviewPanel from '../cutter/PreviewPanel';
 			else {
 				spriteCanvasView.setBg('#000');
 			}
+		});
+
+		toolbarTop.bind('zoom-in', function(event) {
+			spriteCanvasView.zoomIn();
+			event.preventDefault();
+		});
+
+		toolbarTop.bind('zoom-out', function(event) {
+			spriteCanvasView.zoomOut();
+			event.preventDefault();
+		});
+
+		toolbarTop.bind('zoom-reset', function(event) {
+			spriteCanvasView.resetZoom();
+			event.preventDefault();
+		});
+
+		toolbarTop.bind('grid-slice', function(event) {
+			var rows = prompt('Enter number of rows:', '2');
+			var cols = prompt('Enter number of columns:', '2');
+			
+			if (rows && cols) {
+				rows = parseInt(rows, 10);
+				cols = parseInt(cols, 10);
+				
+				if (rows > 0 && cols > 0) {
+					gridSlicer.applyGrid(rows, cols);
+				} else {
+					alert('Invalid grid dimensions. Please enter positive numbers.');
+				}
+			}
+			event.preventDefault();
+
+toolbarTop.bind('auto-select', function(event) {
+var count = autoSlicer.selectAllSprites();
+toolbarTop.feedback( 'Selected ' + count + ' sprites' );
+event.preventDefault();
+});
 		});
 
 		toolbarBottom.bind('percent', function(event) {

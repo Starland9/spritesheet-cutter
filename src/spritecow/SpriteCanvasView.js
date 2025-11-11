@@ -238,6 +238,8 @@ class SpriteCanvasView {
 		this._selectArea = selectArea;
 		this._selectColor = selectColor;
 		this._selectedSprites = selectedSprites;
+		this._$canvas = $canvas;
+		this._zoomLevel = 1;
 
 		$container.appendTo($appendToElm);
 
@@ -261,6 +263,14 @@ class SpriteCanvasView {
 
 		selectColor.bind('move', function (color) {
 			spriteCanvasView.trigger('bgColorHover', color);
+		});
+
+		// Add right-click to export functionality
+		$container.on('contextmenu', function(event) {
+			if (spriteCanvasView._selectedSprites.length > 0) {
+				event.preventDefault();
+				spriteCanvasView.trigger('rightClickExport');
+			}
 		});
 	}
 }
@@ -288,7 +298,7 @@ SpriteCanvasViewProto._selectSprite = function(clickedRect, spriteRect) {
 	const highlight = new Highlight(this._$container);
 	highlight.moveTo(clickedRect); // move to clicked area so the animation starts from click position
 
-	return new SelectedSprite(spriteRect, highlight);
+	return new SelectedSprite(spriteRect, highlight, this);
 }
 
 SpriteCanvasViewProto._unselectAllSprites = function() {
@@ -324,6 +334,32 @@ SpriteCanvasViewProto.setBg = function(color) {
 	}
 	
 	this._highlight.setHighVisOnDark( color === '#000' );
+};
+
+SpriteCanvasViewProto._applyZoom = function() {
+	this._$canvas.css({
+		'transform': 'scale(' + this._zoomLevel + ')',
+		'transform-origin': 'top left'
+	});
+	this._$container.css({
+		'width': this._spriteCanvas.canvas.width * this._zoomLevel,
+		'height': this._spriteCanvas.canvas.height * this._zoomLevel
+	});
+};
+
+SpriteCanvasViewProto.zoomIn = function() {
+	this._zoomLevel = Math.min(this._zoomLevel * 1.2, 5);
+	this._applyZoom();
+};
+
+SpriteCanvasViewProto.zoomOut = function() {
+	this._zoomLevel = Math.max(this._zoomLevel / 1.2, 0.1);
+	this._applyZoom();
+};
+
+SpriteCanvasViewProto.resetZoom = function() {
+	this._zoomLevel = 1;
+	this._applyZoom();
 };
 
 export default SpriteCanvasView;

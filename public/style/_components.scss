@@ -99,7 +99,7 @@
 			left: 0;
 			width: 5px;
 			height: 5px;
-			pointer-events: none;
+			pointer-events: all;
 			border: 1px solid rgba(0, 114, 255, 0.5);
 			box-sizing: border-box;
 			display: none;
@@ -110,6 +110,62 @@
 			&.high-vis {
 				background-color: rgba(0, 255, 48, 0.25);
 				border-color: rgba(0, 255, 51, 0.5);
+			}
+		}
+
+		& .resize-handle {
+			position: absolute;
+			width: 8px;
+			height: 8px;
+			background: #fff;
+			border: 1px solid #0072ff;
+			box-sizing: border-box;
+			z-index: 10;
+			pointer-events: all;
+
+			&.resize-nw {
+				top: -4px;
+				left: -4px;
+				cursor: nw-resize;
+			}
+			&.resize-ne {
+				top: -4px;
+				right: -4px;
+				cursor: ne-resize;
+			}
+			&.resize-sw {
+				bottom: -4px;
+				left: -4px;
+				cursor: sw-resize;
+			}
+			&.resize-se {
+				bottom: -4px;
+				right: -4px;
+				cursor: se-resize;
+			}
+			&.resize-n {
+				top: -4px;
+				left: 50%;
+				margin-left: -4px;
+				cursor: n-resize;
+			}
+			&.resize-s {
+				bottom: -4px;
+				left: 50%;
+				margin-left: -4px;
+				cursor: s-resize;
+			}
+			&.resize-e {
+				right: -4px;
+				top: 50%;
+				margin-top: -4px;
+				cursor: e-resize;
+			}
+			&.resize-w {
+				left: -4px;
+				top: 50%;
+				margin-top: -4px;
+				cursor: w-resize;
 			}
 		}
 
