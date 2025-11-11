@@ -298,7 +298,7 @@ SpriteCanvasViewProto._selectSprite = function(clickedRect, spriteRect) {
 	const highlight = new Highlight(this._$container);
 	highlight.moveTo(clickedRect); // move to clicked area so the animation starts from click position
 
-	return new SelectedSprite(spriteRect, highlight);
+	return new SelectedSprite(spriteRect, highlight, this);
 }
 
 SpriteCanvasViewProto._unselectAllSprites = function() {

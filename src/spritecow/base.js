@@ -72,6 +72,10 @@ import PreviewPanel from '../cutter/PreviewPanel';
 				}
 			});
 		});
+		spriteCanvasView.bind('rectAdjusted', function() {
+			previewPanel.update();
+		});
+
 		
 		spriteCanvasView.bind('bgColorHover', function(color) {
 			toolbarTop.feedback( colourBytesToCss(color) );
