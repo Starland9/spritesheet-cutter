@@ -25,11 +25,11 @@ Click on a sprite, hold shift to select another sprite, and another, and another
 ### Todo
 - [x] Export individual selected sprites as PNG
 - [x] Preview panel for selected sprite
-- [ ] Zoom in/out
+- [x] Zoom in/out
 
 ### Ideas
-- [ ] Right-click to export
+- [x] Right-click to export
 - [x] Shift to select multiple sprites and export all
-- [ ] Adjustable rectangle after selection
-- [ ] Grid-based slicing
-- [ ] Auto select and export all
+- [x] Adjustable rectangle after selection
+- [x] Grid-based slicing
+- [x] Auto select and export all
