@@ -36,7 +36,10 @@ import PreviewPanel from '../cutter/PreviewPanel';
 					addItem('select-sprite', 'Select Sprite', {active: true}).
 					addItem('select-bg', 'Pick Background')
 			).
-			addItem('invert-bg', 'Toggle Dark Background', {noLabel: true});
+			addItem('invert-bg', 'Toggle Dark Background', {noLabel: true}).
+			addItem('zoom-in', 'Zoom In', {noLabel: true}).
+			addItem('zoom-out', 'Zoom Out', {noLabel: true}).
+			addItem('zoom-reset', 'Reset Zoom', {noLabel: true});
 
 		toolbarTop.$container.addClass('top');
 
@@ -81,6 +84,10 @@ import PreviewPanel from '../cutter/PreviewPanel';
 			toolbarTop.feedback( 'Background set to ' + colourBytesToCss(color) );
 		});
 		
+		spriteCanvasView.bind('rightClickExport', function() {
+			previewPanel.handleExport();
+		});
+		
 		toolbarTop.bind('open-img', function(event) {
 			event.preventDefault();
 		});
@@ -107,6 +114,21 @@ import PreviewPanel from '../cutter/PreviewPanel';
 			else {
 				spriteCanvasView.setBg('#000');
 			}
+		});
+
+		toolbarTop.bind('zoom-in', function(event) {
+			spriteCanvasView.zoomIn();
+			event.preventDefault();
+		});
+
+		toolbarTop.bind('zoom-out', function(event) {
+			spriteCanvasView.zoomOut();
+			event.preventDefault();
+		});
+
+		toolbarTop.bind('zoom-reset', function(event) {
+			spriteCanvasView.resetZoom();
+			event.preventDefault();
 		});
 
 		toolbarBottom.bind('percent', function(event) {
